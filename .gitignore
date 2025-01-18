@@ -1,0 +1,12 @@
+node_modules/
+wp-config.php
+*.log
+*.bak
+*.swp
+*.swo
+wp-content/cache/
+wp-content/backups/
+wp-content/plugins/
+wp-content/themes/
+wp-content/uploads/
+wp-content/languages/
