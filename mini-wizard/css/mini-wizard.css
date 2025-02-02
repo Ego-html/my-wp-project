@@ -1,6 +1,12 @@
 @media (max-width: 768px) {
     .wizard-content {
-        height: auto;
+        min-height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
     }
 }
 
@@ -9,8 +15,15 @@ body {
 }
 
 .mini-wizard {
-    max-width: 800px;
-    margin: 0 auto;
+    min-height: 750px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.mini-wizard {
+    transition: min-height 0.3s ease;
 }
 
 .mini-wizard h2 {
@@ -41,12 +54,13 @@ body {
 }
 
 .wizard-content {
+    min-width: 770px;
+    min-height: auto;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding: 20px;
     width: 720px;
-    min-height: 300px;
     margin: 50px auto;
     background-color: #f8f9fa;
     border: 1px solid #ddd;
@@ -68,6 +82,37 @@ body {
 
 .btn-primary:hover {
     background-color: #4c51bf;
+}
+
+/* Стили для кнопки back с !important */
+.prev-step {
+    background-color: white;      /* Белый фон */
+    color: #4F46E5;               /* Цвет текста и стрелочки */
+    border: white;    /* Фиолетовая граница */
+    padding: 10px 20px;
+    font-size: 16px;              /* Размер шрифта */
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Плавное изменение фона и цвета */
+}
+
+.prev-step .me-1 {
+    font-size: 20px;
+    margin-right: 5px;
+    color: #4F46E5;
+}
+
+.prev-step:hover {
+    background-color: #4F46E5;
+    color: white;
+    border: white;
+}
+
+.prev-step:active {
+    background-color: #4F46E5;
+    color: white;
+    border: white;
 }
 
 .custom-font-size {
@@ -116,12 +161,110 @@ body {
     margin-bottom: 5px;
 }
 
-.wizard-content {
-    display: none;
-}
 .wizard-content.active {
     display: block;
 }
+
+.wizard-content {
+    display: none;
+}
+
+.form-label {
+    width: 100px;
+}
+
+.form-group {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem;
+    align-items: start;
+    position: relative;
+}
+
+.required-label {
+    font-size: 0.75rem;
+    position: absolute;
+    top: 5px;
+    left: 44px;
+    transform: translateY(-50%);
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .form-group {
+        grid-template-columns: 1fr;
+    }
+
+    .required-label {
+        left: auto;
+        right: 0;
+    }
+}
+
+.form-group {
+    position: relative;
+}
+
+.required-second-block {
+    position: absolute;
+    left: 40px;
+    top: -10px;
+    font-size: 0.75rem;
+    padding-left: 5px;
+}
+
+.custom-label {
+    padding-top: 10px;
+    margin-left: -10px;
+}
+
+.custom-back-btn {
+    background-color: white;
+    color: #8000ff;
+    border: 2px solid white;
+}
+
+.custom-back-btn span {
+    color: #8000ff;
+}
+
+.custom-back-btn:hover {
+    background-color: #8000ff;
+    color: white;
+}
+
+.custom-back-btn:hover span {
+    color: white;
+}
+
+.text-danger.required-label {
+    color: gray !important;
+}
+
+.text-danger.required-second-block {
+    color: gray !important;
+}
+
+.badge.bg-success {
+    margin-top: -7px;
+}
+
+.badge.bg-warning {
+    margin-top: -7px;
+}
+
+.breadcrumb-item.active {
+    color: #4F46E5;
+    font-weight: bold;
+}
+
+
+
+
+
+
+
+
 
 
 

@@ -73,7 +73,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 quantityInput.classList.remove("is-invalid");
             }
         }
-
         return isValid;
     }
 
@@ -99,6 +98,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (nextStep && nextStep.classList.contains("wizard-content")) {
                         currentStep.classList.remove("active");
                         nextStep.classList.add("active");
+                        updateBreadcrumb(nextStep);
+
                     }
                 } else {
                     const currentStep = document.querySelector(".wizard-content.active");
@@ -106,6 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (errorStep) {
                         currentStep.classList.remove("active");
                         errorStep.classList.add("active");
+                        updateBreadcrumb(errorStep);
                     }
                 }
             })
@@ -116,29 +118,26 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (errorStep) {
                     currentStep.classList.remove("active");
                     errorStep.classList.add("active");
+                    updateBreadcrumb(errorStep);
                 }
             });
     }
 
-    document.body.addEventListener("click", function (event) {
-        const target = event.target;
+    const nextStepButtons = document.querySelectorAll('.next-step');
+    const prevStepButtons = document.querySelectorAll('.prev-step');
+    const sendEmailButton = document.getElementById('send-email-btn');
 
-        if (target.textContent.includes("Start again")) {
-            const currentStep = document.querySelector(".wizard-content.active");
-            if (currentStep) {
-                currentStep.classList.remove("active");
-            }
-            steps[0].classList.add("active");
-        }
+    function handleButtonClick(event) {
+        const currentStep = document.querySelector(".wizard-content.active");
+        const button = event.target;
 
-        if (target.classList.contains("next-step")) {
-            const currentStep = document.querySelector(".wizard-content.active");
-            const nextStep = currentStep?.nextElementSibling;
-
+        if (button.classList.contains("next-step")) {
             if (validateStep(currentStep)) {
+                const nextStep = currentStep?.nextElementSibling;
                 if (nextStep && nextStep.classList.contains("wizard-content")) {
                     currentStep.classList.remove("active");
                     nextStep.classList.add("active");
+                    updateBreadcrumb(nextStep);
 
                     if (nextStep.id === "step-3") {
                         const quantityDisplay = nextStep.querySelector("#quantity-display");
@@ -149,24 +148,20 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 }
             }
-        }
-
-        if (target.classList.contains("prev-step")) {
-            const currentStep = document.querySelector(".wizard-content.active");
-
+        } else if (button.classList.contains("prev-step")) {
             if (currentStep.id === "step-3") {
                 currentStep.classList.remove("active");
                 steps[1].classList.add("active");
+                updateBreadcrumb(steps[1]);
             } else {
                 const prevStep = currentStep?.previousElementSibling;
                 if (prevStep && prevStep.classList.contains("wizard-content")) {
                     currentStep.classList.remove("active");
                     prevStep.classList.add("active");
+                    updateBreadcrumb(prevStep);
                 }
             }
-        }
-
-        if (target.id === "send-email-btn") {
+        } else if (button.id === "send-email-btn") {
             const name = document.querySelector("#name").value.trim();
             const email = document.querySelector("#email").value.trim();
             const phone = document.querySelector("#phone").value.trim();
@@ -180,8 +175,69 @@ document.addEventListener("DOMContentLoaded", function () {
                 quantity: quantity,
                 price: price,
             };
-
             sendEmail(emailData);
         }
+        event.stopPropagation();
+    }
+
+    nextStepButtons.forEach(button => button.addEventListener("click", handleButtonClick));
+    prevStepButtons.forEach(button => button.addEventListener("click", handleButtonClick));
+    if (sendEmailButton) {
+        sendEmailButton.addEventListener("click", handleButtonClick);
+    }
+
+    function updateBreadcrumb(step) {
+        let stepNumber;
+        let instanceCount;
+
+        if (step && step.id) {
+            let idParts = step.id.split("-");
+            stepNumber = parseInt(idParts[1]);
+            instanceCount = stepNumber;
+        }
+        const breadcrumbItems = document.querySelectorAll('.breadcrumb-item');
+        breadcrumbItems.forEach(item => item.classList.remove('active'));
+
+        if (stepNumber) {
+            const breadcrumbItem = document.querySelector(`#breadcrumb-step-${stepNumber}-${instanceCount}`);
+            if (breadcrumbItem) {
+                breadcrumbItem.classList.add('active');
+            }
+        } else {
+            breadcrumbItems[0].classList.add('active');
+        }
+    }
+
+    const firstStep = document.querySelector("#step-1");
+    if (firstStep) {
+        updateBreadcrumb(firstStep);
+    }
+    const startAgainButtons = document.querySelectorAll('.start-again-btn');
+
+    startAgainButtons.forEach(button => {
+        button.addEventListener("click", function (event) {
+            setTimeout(() => {
+                const form = button.closest("form");
+                if (form) {
+                    form.reset();
+                }
+
+                if (errorMessagesContainer) {
+                    errorMessagesContainer.innerHTML = "";
+                }
+
+                const inputs = document.querySelectorAll("input");
+                inputs.forEach(input => {
+                    input.classList.remove("is-invalid");
+                });
+                steps.forEach(step => step.classList.remove("active"));
+                const firstStep = document.querySelector("#step-1");
+                if (firstStep) {
+                    firstStep.classList.add("active");
+                    updateBreadcrumb(firstStep);
+                }
+            }, 100);
+            event.preventDefault();
+        });
     });
 });
